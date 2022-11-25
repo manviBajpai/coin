@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import HTMLReactParser from 'html-react-parser';
 import { useParams } from 'react-router-dom';
 import millify from 'millify';
@@ -12,14 +12,18 @@ import { useGetCryptoDetailsQuery } from '../Services/cryptoApiDetails';
 const { Title, Text } = Typography;
 const { Option } = Select;
 
-function CryptoDetails(){
-    const {coinId} = useParams();
-    const [timePeriod,setTimePeriod]=useState('7d');
-    const {data,isFetching}=useGetCryptoDetailsQuery(coinId);
-    const cryptoDetails=data?.data?.coin;
+function CryptoDetails() {
+  const { coinId } = useParams();
+  const [timePeriod, setTimePeriod] = useState('7d');
+  const { data, isFetching } = useGetCryptoDetailsQuery(coinId);
+  const cryptoDetails = data?.data?.coin;
 
-console.log(cryptoDetails);
-      const time = ['3h', '24h', '7d', '30d', '1y', '3m', '3y', '5y'];
+  useEffect(() => {
+    console.log(data)
+  }, [])
+
+  console.log(cryptoDetails);
+  const time = ['3h', '24h', '7d', '30d', '1y', '3m', '3y', '5y'];
 
   const stats = [
     { title: 'Price to USD', value: `$ ${cryptoDetails?.price && millify(cryptoDetails?.price)}`, icon: <DollarCircleOutlined /> },
@@ -37,22 +41,22 @@ console.log(cryptoDetails);
     { title: 'Circulating Supply', value: `$ ${cryptoDetails?.supply?.circulating && millify(cryptoDetails?.supply?.circulating)}`, icon: <ExclamationCircleOutlined /> },
   ];
   console.log(cryptoDetails);
-    return(
-        <Col  style={{paddingLeft:'280px'}}className='coin-detail-container'>
-          <Col className='coin-heading-container'>
-            <Title level={2} className='coin-name'>
-              {cryptoDetails &&cryptoDetails.name}({cryptoDetails && cryptoDetails.slug}) Price
-             </Title>
-              <p>
-                {cryptoDetails && cryptoDetails.name} 
-              </p>
-            
-          </Col>
-          <Select defaultValue="7d" className='select-timeperiod'
-          placeholder="Select time period"
-          onChange={(value)=>setTimePeriod(value)}>
-            {time.map((date)=><Option key={date}>{date}</Option>)}
-            </Select>          </Col>
-    )
+  return (
+    <Col style={{ paddingLeft: '280px' }} className='coin-detail-container'>
+      <Col className='coin-heading-container'>
+        <Title level={2} className='coin-name'>
+          {cryptoDetails && cryptoDetails.name}({cryptoDetails && cryptoDetails.slug}) Price
+        </Title>
+        <p>
+          {cryptoDetails && cryptoDetails.name}
+        </p>
+
+      </Col>
+      <Select defaultValue="7d" className='select-timeperiod'
+        placeholder="Select time period"
+        onChange={(value) => setTimePeriod(value)}>
+        {time.map((date) => <Option key={date}>{date}</Option>)}
+      </Select>          </Col>
+  )
 }
 export default CryptoDetails;
